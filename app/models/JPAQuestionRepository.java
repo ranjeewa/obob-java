@@ -4,7 +4,6 @@ import play.db.jpa.JPAApi;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,9 +32,19 @@ public class JPAQuestionRepository implements QuestionRepository {
         return null;
     }
 
+    @Override
+    public CompletionStage<Question> get(Long id) {
+        return supplyAsync(() -> wrap(em -> get(em, id)), executionContext);
+    }
+
     private Question insert(EntityManager em, Question question) {
         em.persist(question);
         return question;
+    }
+
+    private Question get(EntityManager em, Long id) {
+        return em.createQuery("select q from question q where q.id = :id", Question.class)
+                .setParameter("id", id).getSingleResult();
     }
 
     private <T> T wrap(Function<EntityManager, T> function) {

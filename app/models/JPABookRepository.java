@@ -50,9 +50,8 @@ public class JPABookRepository implements BookRepository{
     }
 
     private Book get(EntityManager em, Long id) {
-        Book book = em.createQuery("select b from Book b where b.id = :id", Book.class)
+        return em.createQuery("select b from Book b where b.id = :id", Book.class)
                 .setParameter("id", id).getSingleResult();
-        return book;
     }
 
     private <T> T wrap(Function<EntityManager, T> function) {

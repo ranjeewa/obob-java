@@ -11,4 +11,6 @@ public interface QuestionRepository {
     CompletionStage<Question> add(Question question);
 
     CompletionStage<Stream<Question>> list();
+
+    CompletionStage<Question> get(Long id);
 }
