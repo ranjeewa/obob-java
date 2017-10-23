@@ -1,19 +1,17 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import models.Book;
-import models.BookRepository;
 import models.Question;
 import models.QuestionRepository;
 import play.data.Form;
 import play.data.FormFactory;
-import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static play.libs.Json.toJson;
@@ -44,4 +42,18 @@ public class QuestionController extends Controller {
 
     }
 
+    public CompletionStage<Result> questions() {
+
+        Long[] bookIds = null;
+        Optional<String> bookIdsAsString = Optional.ofNullable(request().getQueryString("bookIds"));
+        //TODO add input validation
+        //TODO add error handling
+        if (bookIdsAsString.isPresent()) {
+            bookIds =Arrays.stream(bookIdsAsString.get()
+                    .split(","))
+                    .map(Long::parseLong)
+                    .toArray(Long[]::new);
+        }
+        return questionRepository.getForBooks(bookIds).thenApplyAsync(questions -> ok(toJson(questions)), ec.current());
+    }
 }

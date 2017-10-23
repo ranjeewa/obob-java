@@ -13,4 +13,6 @@ public interface QuestionRepository {
     CompletionStage<Stream<Question>> list();
 
     CompletionStage<Question> get(Long id);
+
+    CompletionStage<Stream<Question>> getForBooks(Long[] bookIds);
 }
