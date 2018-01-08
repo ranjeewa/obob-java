@@ -13,7 +13,9 @@ public class Question {
 
     public String answer;
 
-    public int pageNumber;
+    public Integer pageNumber;
+
+    public Integer chapter;
 
     @Column(nullable = false)
     public Long bookId;
